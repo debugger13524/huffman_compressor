@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -41,7 +44,7 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
     downloadsPath = downloadsDir.path;
 
     print("External Path===>>>> $downloadsPath");
-    final file = File('$downloadsPath/${fileName}_enoded.txt');
+    final file = File('$downloadsPath/${fileName.split('.')[0]}_enoded.txt');
 
     file.writeAsString('$text');
   }
@@ -63,11 +66,14 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
         });
 
         EncodeText encodeText = EncodeText(content);
-        encodeText.calculateHuffmanCode();
-        print("\n${encodeText.getCharactersCodes()}");
-        print("\n${encodeText.getResultText()}");
+         encodeText.calculateHuffmanCode();
 
-        _writeToFile(encodeText.getResultText())
+
+        print("\n${   encodeText.getCharactersCodes()}");
+
+        print("\n${  encodeText.getResultText()}");
+
+        await _writeToFile(encodeText.getResultText())
             .then((value) => showAlertDialog(context));
 
         setState(() {
@@ -181,12 +187,7 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
                     ],
                   ),
                 ),
-                Text(
-                  freqTable,
-                  style: GoogleFonts.poppins(
-                    fontSize: 15,
-                  ),
-                ),
+
               ],
             ),
           ),
